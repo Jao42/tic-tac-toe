@@ -1,0 +1,29 @@
+.game-table {
+  background-color: red;
+  display: grid;
+  width: 600px;
+  height: 600px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 3px;
+
+}
+
+.game-table > div {
+  display: flex;
+  background-color: #fff;
+  cursor: pointer;
+
+  /*centralizando texto na div*/
+  align-items: center;
+  justify-content: center;
+
+
+}
+
+.game-table > div > span {
+
+  font-size: 100px;
+
+
+}
