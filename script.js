@@ -1,5 +1,6 @@
 const body = document.querySelector('body');
 const gameTable = document.querySelector('.game-table');
+const results = document.querySelector('.results');
 
 function createGameTable() {
   let quadrant;
@@ -43,6 +44,23 @@ function gameStatusListener(arrayX, arrayY, arrayBoard) {
   else return 0;
 
 }
+function displayResult(result) {
+
+  textLabel = document.createElement('span')
+  textLabel.innerHTML += result+'<br>';
+  results.appendChild(textLabel);
+
+  return 0
+}
+
+function cleanScreen(quadrants) {
+
+  quadrants.forEach((quadrant) => {
+    quadrant.innerHTML = '';
+
+  })
+}
+
 
 const gameBoard = {
   quadrants: document.querySelectorAll('.game-table > div')
@@ -52,26 +70,34 @@ arrayBoard = Array(9).fill();
 let arrayX = [];
 let arrayY = [];
 
-player = {one: 'x', two: 'o'};
 
 let activeX = true;
 let activeY = false;
+player1 = player('player1', '⨯')
+player2 = player('player2', '◯')
 
 let result = 0;
 gameBoard.quadrants.forEach((e, i) => {
 
   e.addEventListener('click', () => {
-    currentPlayer = activeX ? player.one: player.two;
+    currentPlayer = activeX ? player1: player2;
     if (!e.firstElementChild) {
       a = document.createElement('span');
-      a.textContent = currentPlayer;
+      a.textContent = currentPlayer.symbol;
       e.appendChild(a);
-      arrayBoard[i] = currentPlayer;
-      currentPlayer == player.one ? arrayX.push(i): arrayY.push(i);
+      arrayBoard[i] = currentPlayer.symbol;
+      currentPlayer == player1 ? arrayX.push(i): arrayY.push(i);
       activeX = !activeX;
       activeY = !activeY;
       result = gameStatusListener(arrayX, arrayY, arrayBoard);
+      if (result) {
+        displayResult(result);
+        cleanScreen(gameBoard.quadrants);
+        
+        arrayBoard = Array(9).fill();
+        arrayX = [];
+        arrayY = [];
+      }
     }
-    result ? setTimeout(() => {alert(result)}, 1): ''
   })
 })
