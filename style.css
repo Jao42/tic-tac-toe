@@ -1,11 +1,19 @@
+
 .game-table {
-  background-color: red;
+  position: absolute;
   display: grid;
+  background-color: #000;
   width: 600px;
   height: 600px;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: 3px;
+
+  /*centralizing */
+
+  top: 50%;
+  transform: translateY(-50%);
+  left: calc(50% - 300px);
 
 }
 
@@ -17,7 +25,6 @@
   /*centralizando texto na div*/
   align-items: center;
   justify-content: center;
-
 
 }
 
