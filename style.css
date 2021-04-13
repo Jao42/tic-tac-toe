@@ -5,9 +5,18 @@
 
 }
 
-.game-table {
-  background-color: black;
+.game-table > div {
+  background-color: #fff;
+  cursor: pointer;
 
+  /*centralizando texto na div*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.game-table {
   position: absolute;
   width: 600px;
   height: 600px;
@@ -104,16 +113,6 @@
 
 }
 
-.game-table > div {
-  background-color: #fff;
-  cursor: pointer;
-
-  /*centralizando texto na div*/
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-}
 
 .game-table > div > span {
 

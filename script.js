@@ -13,6 +13,7 @@ function createGameTable() {
     quadrant = document.createElement('div');
     gameTable.appendChild(quadrant);
   }
+  gameTable.style.backgroundColor = '#000';
 }
 createGameTable()
 
