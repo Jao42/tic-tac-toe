@@ -1,6 +1,9 @@
 const body = document.querySelector('body');
 const gameTable = document.querySelector('.game-table');
+const telaInicial = document.querySelector('.tela-inicial');
 const results = document.querySelector('.results');
+const buttonMachine = document.querySelector('.button-machine')
+const buttonHuman = document.querySelector('.button-human')
 
 function createGameTable() {
   let quadrant;
@@ -61,7 +64,6 @@ function cleanScreen(quadrants) {
   })
 }
 
-
 const gameBoard = {
   quadrants: document.querySelectorAll('.game-table > div')
 
@@ -77,6 +79,8 @@ player1 = player('player1', '⨯')
 player2 = player('player2', '◯')
 
 let result = 0;
+
+
 gameBoard.quadrants.forEach((e, i) => {
 
   e.addEventListener('click', () => {
@@ -97,6 +101,7 @@ gameBoard.quadrants.forEach((e, i) => {
         arrayBoard = Array(9).fill();
         arrayX = [];
         arrayY = [];
+        activeX = true; activeY = false;
       }
     }
   })
