@@ -40,6 +40,11 @@
 
 }
 
+.initial-screen-close { 
+  display: none !important;
+
+}
+
 .initial-screen-content {
   background-color: #fff;
   border-radius: 5%;
