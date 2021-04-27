@@ -4,6 +4,12 @@ const initialScreen = document.querySelector('.initial-screen');
 const results = document.querySelector('.results');
 const humanButton = document.querySelector('.human-button')
 const machineButton = document.querySelector('.machine-button')
+const modeButtons = [humanButton, machineButton];
+let isMachine;
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 
 function createGameTable() {
@@ -16,6 +22,7 @@ function createGameTable() {
   gameTable.style.backgroundColor = '#000';
 }
 createGameTable()
+
 
 function player(name, symbol, machine) {
 
@@ -43,9 +50,9 @@ function gameStatusListener(arrayX, arrayY, arrayBoard) {
   else if (isWinner(arrayY)){
     return 'Player 2 wins!';
   }
-  else if (arrayBoard.every(Boolean)) {
-    return 'A tie!';
-  }
+
+  else if (arrayBoard.every(Boolean)) {return 'A tie!';}
+
   else return 0;
 
 }
@@ -67,20 +74,40 @@ function cleanScreen(quadrants) {
 }
 
 
-humanButton.addEventListener('click', () => {
-  initialScreen.classList.add('initial-screen-close');
+function playerChoice(e, i, arrayX, arrayY, arrayBoard, activeX, player1, player2) {
 
+  if (e.firstElementChild) return 1;
+
+  let currentPlayer = activeX ? player1 : player2;
+
+  let a = document.createElement('span');
+  a.textContent = currentPlayer.symbol;
+  e.appendChild(a);
+
+  arrayBoard[i] = currentPlayer.symbol;
+  currentPlayer == player1 ? arrayX.push(i): arrayY.push(i);
+
+  result = gameStatusListener(arrayX, arrayY, arrayBoard);
+
+  return result;
+}
+
+modeButtons.forEach((e) => {
+  e.addEventListener('click', () => {
+  initialScreen.classList.add('modal-close');
+  if (e === machineButton) isMachine = true;
+  
+  })
 })
-
 
 const gameBoard = {
   quadrants: document.querySelectorAll('.game-table > div')
 
 }
-arrayBoard = Array(9).fill();
+
+let arrayBoard = Array(9).fill();
 let arrayX = [];
 let arrayY = [];
-
 
 let activeX = true;
 let activeY = false;
@@ -90,28 +117,32 @@ player2 = player('player2', '◯', false)
 let result = 0;
 
 gameBoard.quadrants.forEach((e, i) => {
-
   e.addEventListener('click', () => {
-    currentPlayer = activeX ? player1: player2;
-    if (!e.firstElementChild) {
-      a = document.createElement('span');
-      a.textContent = currentPlayer.symbol;
-      e.appendChild(a);
-      arrayBoard[i] = currentPlayer.symbol;
-      currentPlayer == player1 ? arrayX.push(i): arrayY.push(i);
-
+    if (!e.textContent) {
+      result = playerChoice(e, i, arrayX, arrayY, arrayBoard, activeX, player1, player2);
       activeX = !activeX;
       activeY = !activeY;
-      result = gameStatusListener(arrayX, arrayY, arrayBoard);
+
+      
       if (result) {
-        displayResult(result);
-        cleanScreen(gameBoard.quadrants);
-        
-        arrayBoard = Array(9).fill();
-        arrayX = [];
-        arrayY = [];
-        activeX = true; activeY = false;
+      displayResult(result);
+      arrayBoard = Array(9).fill();
+      arrayX = [];
+      arrayY = [];
+      cleanScreen(gameBoard.quadrants);
+      
+      }
+
+      else if ((!result) && (isMachine)) {
+        do {indexRandom = Math.floor(Math.random() * 9);} while (arrayY.includes(indexRandom) || arrayX.includes(indexRandom)); 
+        quadrantRandom = gameBoard.quadrants[indexRandom];
+        sleep(300);
+        playerChoice(quadrantRandom, indexRandom, arrayX, arrayY, arrayBoard, activeX, player1, player2);
+        activeX = !activeX;
+        activeY = !activeY;
+
       }
     }
+
   })
 })

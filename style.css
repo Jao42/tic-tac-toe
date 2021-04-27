@@ -35,7 +35,7 @@
 
 }
 
-.initial-screen {
+.modal {
   background-color: rgba(0, 0, 0, 0.5);
 
   position: absolute;
@@ -49,12 +49,12 @@
 
 }
 
-.initial-screen-close { 
+.modal-close { 
   display: none !important;
 
 }
 
-.initial-screen-content {
+.modal-content {
   background-color: #fff;
   border-radius: 5%;
 
@@ -69,14 +69,14 @@
 
 }
 
-.initial-screen-title {
+.modal-title {
 
   height: 50%;
 
 }
 
 
-.choice-buttons {
+.modal-buttons {
   height: 50%;
   width: 100%;
 
@@ -95,7 +95,7 @@
   margin-right: 80px;
 }
 
-.choice-button {
+.modal-button {
 
   cursor: pointer;
   background-color: #be5de8;
@@ -106,7 +106,7 @@
 
 }
 
-.choice-button:hover {
+.modal-button:hover {
 
   background-color: #8800ff;
   color: #fff;
