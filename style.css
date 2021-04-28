@@ -120,13 +120,6 @@
 
 }
 
-.buttons {
-  display: flex;
-  position: relative;
-  top: 40%;
-
-}
-
 button {
 
 margin: 10px;
@@ -148,3 +141,22 @@ margin: 10px;
 
 }
 
+
+/* modal end game */
+
+
+.end-game-buttons {
+
+  display: flex;
+  align-items: start;
+  justify-content: center;
+
+
+}
+
+
+.end-game-modal {
+
+  visibility: hidden;
+  transition: opacity 500ms;
+}

@@ -21,12 +21,46 @@ function createGameTable() {
   }
   gameTable.style.backgroundColor = '#000';
 }
-createGameTable()
+
+
+function createEndGameModal() {
+  let modalDiv = document.createElement('div');
+  modalDiv.classList.add('modal');
+  modalDiv.classList.add('end-game-modal');
+
+  let contentModalDiv = document.createElement('div');
+  contentModalDiv.classList.add('modal-content');
+
+  let titleModalDiv = document.createElement('div');
+  titleModalDiv.classList.add('modal-title');
+  titleModalDiv.classList.add('end-game-title');
+
+  let buttonsModalDiv = document.createElement('div');
+  buttonsModalDiv.classList.add('modal-buttons');
+  buttonsModalDiv.classList.add('end-game-buttons');
+  
+  
+  let buttonModal = document.createElement('div');
+  buttonModal.classList.add('modal-button');
+  buttonModal.textContent = 'Continue';
+
+  contentModalDiv.appendChild(titleModalDiv);
+  buttonsModalDiv.appendChild(buttonModal);
+  contentModalDiv.appendChild(titleModalDiv);
+  contentModalDiv.appendChild(buttonsModalDiv);
+  modalDiv.appendChild(contentModalDiv);
+
+  modalDiv.style.opacity = 0;
+  body.appendChild(modalDiv);
+  window.getComputedStyle(modalDiv).opacity;
+
+}
+
 
 
 function player(name, symbol, machine) {
 
-  return { name, symbol, machine }
+  return { name, symbol, machine };
 
 }
 
@@ -58,11 +92,10 @@ function gameStatusListener(arrayX, arrayY, arrayBoard) {
 }
 function displayResult(result) {
 
-  textLabel = document.createElement('span')
-  textLabel.innerHTML += result+'<br>';
-  results.appendChild(textLabel);
-
-  return 0
+  endGameModal.style.opacity = 1;
+  endGameModal.style.visibility = 'visible';
+  endGameTitle.innerHTML = `<h1>${result}</h1>`;
+  return 0;
 }
 
 function cleanScreen(quadrants) {
@@ -98,7 +131,6 @@ function resetDefault(result) {
   arrayBoard = Array(9).fill();
   arrayX = [];
   arrayY = [];
-  cleanScreen(gameBoard.quadrants);
   activeX = true; activeY = false;
   return 0;
 }
@@ -115,6 +147,7 @@ function randint(rangeLen) {
 }
 
 
+createGameTable()
 modeButtons.forEach((e) => {
   e.addEventListener('click', () => {
   initialScreen.classList.add('modal-close');
@@ -142,13 +175,26 @@ const player2 = player('player2', '◯', false)
 
 let result = 0;
 
+createEndGameModal();
+const endGameTitle = document.querySelector('.end-game-title');
+const endGameModal = document.querySelector('.end-game-modal');
+const endGameButton = document.querySelector('.end-game-buttons > div');
+
+endGameButton.addEventListener('click', () => {
+  
+  endGameModal.style.cssText = 'opacity: 0; visibility: hidden;';
+  cleanScreen(gameBoard.quadrants);
+
+})
+
+
 gameBoard.quadrants.forEach((e, i) => {
   e.addEventListener('click', () => {
     if (!e.textContent) {
 
       result = playerChoice(e, i, arrayX, arrayY, arrayBoard, activeX, player1, player2);
 
-      if (result) resetDefault(result);
+      if (result) resetDefault(result)
       else changeCurrentPlayer();
 
       if ((!result) && (isMachine)) {
