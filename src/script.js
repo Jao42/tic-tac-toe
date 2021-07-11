@@ -5,12 +5,7 @@ const results = document.querySelector('.results');
 const humanButton = document.querySelector('.human-button')
 const machineButton = document.querySelector('.machine-button')
 const modeButtons = [humanButton, machineButton];
-let isMachine;
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
+let isMachineGame;
 
 function createGameTable() {
   let quadrant;
@@ -55,8 +50,6 @@ function createEndGameModal() {
   window.getComputedStyle(modalDiv).opacity;
 
 }
-
-
 
 function player(name, symbol, machine) {
 
@@ -107,31 +100,32 @@ function cleanScreen(quadrants) {
 }
 
 
-function playerChoice(e, i, arrayX, arrayY, arrayBoard, activeX, player1, player2) {
+function playerChoice(obj) {
+  if (obj.quadrante.firstElementChild) return 1;
 
-  if (e.firstElementChild) return 1;
-
-  let currentPlayer = activeX ? player1 : player2;
+  let currentPlayer = obj.activeX ? obj.player1 : obj.player2;
 
   let a = document.createElement('span');
   a.textContent = currentPlayer.symbol;
-  e.appendChild(a);
+  obj.quadrante.appendChild(a);
+  
+  let arrayBoard = [...(obj.arrayBoard)]
+  let arrayX = [...(obj.arrayX)]
+  let arrayY = [...(obj.arrayY)]
 
-  arrayBoard[i] = currentPlayer.symbol;
-  currentPlayer == player1 ? arrayX.push(i): arrayY.push(i);
+  arrayBoard[obj.index] = currentPlayer.symbol;
+  currentPlayer == obj.player1 ? arrayX.push(obj.index): arrayY.push(obj.index);
 
-  result = gameStatusListener(arrayX, arrayY, arrayBoard);
-
-  return result;
+  return [arrayX, arrayY, arrayBoard]
 }
 
 function resetDefault(result) {
        
   displayResult(result);
-  arrayBoard = Array(9).fill();
-  arrayX = [];
-  arrayY = [];
-  activeX = true; activeY = false;
+  obj.arrayBoard = Array(9).fill();
+  obj.arrayX = [];
+  obj.arrayY = [];
+  obj.activeX = true;
   return 0;
 }
 
@@ -151,7 +145,7 @@ createGameTable()
 modeButtons.forEach((e) => {
   e.addEventListener('click', () => {
   initialScreen.classList.add('modal-close');
-  if (e === machineButton) isMachine = true;
+  if (e === machineButton) isMachineGame = true;
   
   })
 })
@@ -161,17 +155,6 @@ const gameBoard = {
   quadrants: document.querySelectorAll('.game-table > div')
 
 }
-
-let arrayBoard = Array(9).fill();
-
-let arrayX = [];
-let arrayY = [];
-
-let activeX = true;
-let activeY = false;
-
-const player1 = player('player1', '⨯', false)
-const player2 = player('player2', '◯', false)
 
 let result = 0;
 
@@ -187,27 +170,52 @@ endGameButton.addEventListener('click', () => {
 
 })
 
+let obj = {
+  quadrante: '',
+  index: '',
+  arrayX: [],
+  arrayY: [],
+  arrayBoard: Array(9).fill(),
+  activeX: true,
+  player1: player('player1', '⨯', false),
+  player2: player('player2', '◯', false)
+}
+let play;
 
 gameBoard.quadrants.forEach((e, i) => {
   e.addEventListener('click', () => {
     if (!e.textContent) {
-
-      result = playerChoice(e, i, arrayX, arrayY, arrayBoard, activeX, player1, player2);
+      obj.quadrante = e
+      obj.index = i
+      play = playerChoice(obj);
+      obj.arrayX = play[0];
+      obj.arrayY = play[1];
+      obj.arrayBoard = play[2];
+      result = gameStatusListener(obj.arrayX, obj.arrayY, obj.arrayBoard);
 
       if (result) resetDefault(result)
-      else changeCurrentPlayer();
-
-      if ((!result) && (isMachine)) {
-        do {indexRandom = randint(9)} while (arrayY.includes(indexRandom) || arrayX.includes(indexRandom)); 
+      else
+        obj.activeX = !(obj.activeX);
+      if ((!result) && (isMachineGame)) {
+        do {
+          indexRandom = randint(9)
+        } while (obj.arrayY.includes(indexRandom) || obj.arrayX.includes(indexRandom)); 
 
         quadrantRandom = gameBoard.quadrants[indexRandom];
-        sleep(300);
-        result = playerChoice(quadrantRandom, indexRandom, arrayX, arrayY, arrayBoard, activeX, player1, player2);
+        obj.quadrante = quadrantRandom
+        obj.index = indexRandom
+
+        play = playerChoice(obj);
+        obj.arrayX = play[0];
+        obj.arrayY = play[1];
+        obj.arrayBoard = play[2];
+
+        result = gameStatusListener(obj.arrayX, obj.arrayY, obj.arrayBoard);
 
         if (result) resetDefault(result);
-        else changeCurrentPlayer();
+        else 
+          obj.activeX = !(obj.activeX);
       }
-  }
-
+    }
   })
 })
