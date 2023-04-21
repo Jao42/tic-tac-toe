@@ -7,98 +7,15 @@ const machineButton = document.querySelector('.machine-button')
 const modeButtons = [humanButton, machineButton];
 let isMachineGame;
 
-function createGameTable() {
-  let quadrant;
+import gameStatusListener from './gameStatus.js'
+import { createGameTable, createEndGameModal, displayResult, cleanScreen } from './domStuff'
 
-  for(let i = 1; i <= 9; i++) {
-    quadrant = document.createElement('div');
-    gameTable.appendChild(quadrant);
-  }
-  gameTable.style.backgroundColor = '#000';
-}
-
-
-function createEndGameModal() {
-  let modalDiv = document.createElement('div');
-  modalDiv.classList.add('modal');
-  modalDiv.classList.add('end-game-modal');
-
-  let contentModalDiv = document.createElement('div');
-  contentModalDiv.classList.add('modal-content');
-
-  let titleModalDiv = document.createElement('div');
-  titleModalDiv.classList.add('modal-title');
-  titleModalDiv.classList.add('end-game-title');
-
-  let buttonsModalDiv = document.createElement('div');
-  buttonsModalDiv.classList.add('modal-buttons');
-  buttonsModalDiv.classList.add('end-game-buttons');
-  
-  
-  let buttonModal = document.createElement('div');
-  buttonModal.classList.add('modal-button');
-  buttonModal.textContent = 'Continue';
-
-  contentModalDiv.appendChild(titleModalDiv);
-  buttonsModalDiv.appendChild(buttonModal);
-  contentModalDiv.appendChild(titleModalDiv);
-  contentModalDiv.appendChild(buttonsModalDiv);
-  modalDiv.appendChild(contentModalDiv);
-
-  modalDiv.style.opacity = 0;
-  body.appendChild(modalDiv);
-  window.getComputedStyle(modalDiv).opacity;
-
-}
 
 function player(name, symbol, machine) {
 
   return { name, symbol, machine };
 
 }
-
-function isWinner(playerArray) {
-  winnerPositions = [
-      [0, 1, 2], [0, 3, 6], 
-      [0, 4, 8], [1, 4, 7], 
-      [2, 4, 6], [2, 5, 8], 
-      [3, 4, 5], [6, 7, 8]
-  ];
-
-  return winnerPositions.some((winnerPosition) => winnerPosition.every((i) => playerArray.includes(i))); 
-
-}
-
-function gameStatusListener(arrayX, arrayY, arrayBoard) {
-
-  if (isWinner(arrayX)){
-    return 'Player 1 wins!';
-  }
-  else if (isWinner(arrayY)){
-    return 'Player 2 wins!';
-  }
-
-  else if (arrayBoard.every(Boolean)) {return 'A tie!';}
-
-  else return 0;
-
-}
-function displayResult(result) {
-
-  endGameModal.style.opacity = 1;
-  endGameModal.style.visibility = 'visible';
-  endGameTitle.innerHTML = `<h1>${result}</h1>`;
-  return 0;
-}
-
-function cleanScreen(quadrants) {
-
-  quadrants.forEach((quadrant) => {
-    quadrant.innerHTML = '';
-
-  })
-}
-
 
 function playerChoice(obj) {
   if (obj.quadrante.firstElementChild) return 1;
@@ -119,9 +36,9 @@ function playerChoice(obj) {
   return [arrayX, arrayY, arrayBoard]
 }
 
-function resetDefault(result) {
+function resetDefault(result, endGameModal) {
        
-  displayResult(result);
+  displayResult(result, endGameModal, endGameTitle);
   obj.arrayBoard = Array(9).fill();
   obj.arrayX = [];
   obj.arrayY = [];
@@ -141,7 +58,7 @@ function randint(rangeLen) {
 }
 
 
-createGameTable()
+createGameTable(gameTable)
 modeButtons.forEach((e) => {
   e.addEventListener('click', () => {
   initialScreen.classList.add('modal-close');
@@ -158,7 +75,7 @@ const gameBoard = {
 
 let result = 0;
 
-createEndGameModal();
+createEndGameModal(body);
 const endGameTitle = document.querySelector('.end-game-title');
 const endGameModal = document.querySelector('.end-game-modal');
 const endGameButton = document.querySelector('.end-game-buttons > div');
@@ -180,7 +97,10 @@ let obj = {
   player1: player('player1', '⨯', false),
   player2: player('player2', '◯', false)
 }
+
 let play;
+let indexRandom;
+let quadrantRandom;
 
 gameBoard.quadrants.forEach((e, i) => {
   e.addEventListener('click', () => {
@@ -193,13 +113,14 @@ gameBoard.quadrants.forEach((e, i) => {
       obj.arrayBoard = play[2];
       result = gameStatusListener(obj.arrayX, obj.arrayY, obj.arrayBoard);
 
-      if (result) resetDefault(result)
+      if (result) resetDefault(result, endGameModal)
       else
         obj.activeX = !(obj.activeX);
       if ((!result) && (isMachineGame)) {
         do {
           indexRandom = randint(9)
-        } while (obj.arrayY.includes(indexRandom) || obj.arrayX.includes(indexRandom)); 
+        } while (obj.arrayY.includes(indexRandom)
+          || obj.arrayX.includes(indexRandom)); 
 
         quadrantRandom = gameBoard.quadrants[indexRandom];
         obj.quadrante = quadrantRandom
@@ -212,7 +133,7 @@ gameBoard.quadrants.forEach((e, i) => {
 
         result = gameStatusListener(obj.arrayX, obj.arrayY, obj.arrayBoard);
 
-        if (result) resetDefault(result);
+        if (result) resetDefault(result, endGameModal);
         else 
           obj.activeX = !(obj.activeX);
       }
