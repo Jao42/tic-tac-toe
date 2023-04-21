@@ -13,13 +13,15 @@ function isWinner(playerArray) {
 function gameStatusListener(arrayX, arrayY, arrayBoard) {
 
   if (isWinner(arrayX)){
-    return 'X ganhou!';
+    return '"X" ganhou!';
   }
   else if (isWinner(arrayY)){
-    return 'O ganhou!';
+    return '"O" ganhou!';
   }
 
-  else if (arrayBoard.every(Boolean)) {return 'A tie!';}
+  else if (arrayBoard.every(Boolean)) {
+    return 'Um empate!';
+  }
 
   else return 0;
 

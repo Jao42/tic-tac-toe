@@ -27,7 +27,7 @@ function createEndGameModal(body) {
 
   let buttonModal = document.createElement('div');
   buttonModal.classList.add('modal-button');
-  buttonModal.textContent = 'Continue';
+  buttonModal.textContent = 'Jogar Novamente';
 
   contentModalDiv.appendChild(titleModalDiv);
   buttonsModalDiv.appendChild(buttonModal);
