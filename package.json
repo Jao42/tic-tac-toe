@@ -4,12 +4,20 @@
   "description": "![Showcase](http://i.imgur.com/RfjLUBg.png)",
   "main": "script.js",
   "directories": {
-    "test": "tests",
-    "src": "src"
+    "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "build": "webpack",
+    "build-dev": "webpack --mode=development",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
+    "jest": {
+      "moduleNameMapper": {
+        "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+        "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
+      }
+    },
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -22,6 +30,8 @@
   },
   "homepage": "https://github.com/Jao42/tic-tac-toe#readme",
   "devDependencies": {
+    "@babel/preset-env": "^7.14.7",
+    "gh-pages": "^5.0.0",
     "jest": "^27.0.6",
     "webpack": "^5.44.0",
     "webpack-cli": "^4.7.2"
